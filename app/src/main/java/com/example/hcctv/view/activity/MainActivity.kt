@@ -1,6 +1,7 @@
 package com.example.hcctv.view.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.hcctv.R
 import com.example.hcctv.base.BaseActivity
@@ -34,9 +35,21 @@ class MainActivity(override val ACTIVITY_TAG: String = "MAIN_ACTIVITY") :
         }
     }
 
-    private fun changeFragment(fragment: Fragment) {
+    fun changeFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, fragment)
             .commit()
+    }
+
+    fun saveAndChangeFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun hideBottomNavi(state: Boolean) {
+        if (state) binding.bottomNavigation.visibility = View.GONE
+        else binding.bottomNavigation.visibility = View.VISIBLE
     }
 }
