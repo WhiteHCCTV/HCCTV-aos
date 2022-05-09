@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DeviceViewModel(application : Application) : AndroidViewModel(application) {
+class DeviceViewModel(application: Application) : AndroidViewModel(application) {
     private val _deviceItemList: MutableLiveData<List<Device>> = MutableLiveData()
     private val repository = DeviceRepositoryImpl(application)
 
@@ -18,8 +18,35 @@ class DeviceViewModel(application : Application) : AndroidViewModel(application)
     fun getDeviceItems() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                _deviceItemList.value = repository.getAllDevices()
+                _deviceItemList.postValue(repository.getAllDevices())
             }
+        }
+    }
+
+    fun insertDevice(address : String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.insertDevice(address)
+            }
+        }
+    }
+
+    fun updateDevice(address : String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.updateDevice(address)
+            }
+        }
+    }
+
+    fun deleteDevice() {
+
+    }
+
+
+    class Factory(private val application: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return DeviceViewModel(application) as T
         }
     }
 }
