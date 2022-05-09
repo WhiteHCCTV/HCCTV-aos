@@ -1,8 +1,6 @@
 package com.example.hcctv.base
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.example.hcctv.view.activity.MainActivity
 
 abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes private val layoutResId: Int) :
     Fragment() {
@@ -17,6 +16,11 @@ abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes private val layoutRe
 
     private var _binding: T? = null
     val binding get() = _binding ?: error("Not Initialized")
+
+    private val _activity by lazy {
+        requireActivity() as MainActivity
+    }
+    val activity get() = _activity
 
     override fun onCreateView(
         inflater: LayoutInflater,
