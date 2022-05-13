@@ -5,38 +5,81 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="12dp">
 
-        <EditText
-            android:id="@+id/messageEditText"
+        <TextView
+            android:id="@+id/titleTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
-            android:hint="전송할 메세지를 입력하세요."
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingHorizontal="12dp"
+            android:text="사진 추가하기"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/subTitleTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/subTitleTextView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="전송"
-            app:layout_constraintBottom_toTopOf="@+id/btn_receive"
+            android:paddingHorizontal="12dp"
+            android:text="새로 학습할 사진을 선택해주세요."
+            app:layout_constraintBottom_toTopOf="@+id/imageRecyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/messageEditText" />
+            app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
         <Button
             android:id="@+id/btn_receive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메세지 수신"
+            android:text="(임시용) 이미지 수신"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_send" />
+            app:layout_constraintTop_toBottomOf="@+id/subTitleTextView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imageRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/btn_submit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subTitleTextView" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_round_background"
+            android:backgroundTint="@color/green_200"
+            android:stateListAnimator="@null"
+            android:text="등록하기"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subTitleTextView" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
