@@ -1,7 +1,9 @@
 package com.example.hcctv.view.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.hcctv.R
 import com.example.hcctv.base.BaseActivity
@@ -51,5 +53,9 @@ class MainActivity(override val ACTIVITY_TAG: String = "MAIN_ACTIVITY") :
     fun hideBottomNavi(state: Boolean) {
         if (state) binding.bottomNavigation.visibility = View.GONE
         else binding.bottomNavigation.visibility = View.VISIBLE
+    }
+
+    fun showToast(context: Context, text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 }
