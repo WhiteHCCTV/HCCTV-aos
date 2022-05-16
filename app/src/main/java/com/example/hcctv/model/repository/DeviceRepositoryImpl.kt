@@ -1,6 +1,7 @@
 package com.example.hcctv.model.repository
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import com.example.hcctv.model.data.Device
 import com.example.hcctv.model.database.DeviceDao
 import com.example.hcctv.model.database.DeviceDatabase
@@ -19,5 +20,5 @@ class DeviceRepositoryImpl(application: Application) : DeviceRepository {
     override suspend fun deleteDevice(address: String) =
         deviceDao.deleteDevice(Device(id = null, ipAddress = address))
 
-    override fun getAllDevices(): List<Device> = deviceDao.getAllDevices()
+    override fun getAllDevices(): LiveData<List<Device>> = deviceDao.getAllDevices()
 }

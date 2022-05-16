@@ -9,44 +9,25 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DeviceViewModel(application: Application) : AndroidViewModel(application) {
-    private val _deviceItemList: MutableLiveData<List<Device>> = MutableLiveData()
     private val repository = DeviceRepositoryImpl(application)
+    private val _deviceItemList = repository.getAllDevices()
 
     val deviceItemList: LiveData<List<Device>>
         get() = _deviceItemList
 
-    fun getDeviceItems() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _deviceItemList.postValue(repository.getAllDevices())
-            }
-        }
+    fun getAllDevices(): LiveData<List<Device>> {
+        return deviceItemList
     }
 
-    fun insertDevice(address : String) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repository.insertDevice(address)
-            }
-        }
+    suspend fun insertDevice(address: String) {
+        repository.insertDevice(address)
     }
 
-    fun updateDevice(address : String) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repository.updateDevice(address)
-            }
-        }
+    suspend fun updateDevice(address: String) {
+        repository.updateDevice(address)
     }
 
-    fun deleteDevice() {
-
-    }
-
-
-    class Factory(private val application: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return DeviceViewModel(application) as T
-        }
+    suspend fun deleteDevice(address: String) {
+        repository.deleteDevice(address)
     }
 }

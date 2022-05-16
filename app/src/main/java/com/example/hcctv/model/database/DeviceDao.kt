@@ -1,5 +1,6 @@
 package com.example.hcctv.model.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.hcctv.model.data.Device
 
@@ -15,5 +16,5 @@ interface DeviceDao {
     suspend fun deleteDevice(device: Device)
 
     @Query("SELECT * FROM Device")
-    fun getAllDevices(): List<Device>
+    fun getAllDevices(): LiveData<List<Device>>
 }
