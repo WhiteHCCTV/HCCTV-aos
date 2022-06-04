@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp">
+
+        <TextView
+            android:id="@+id/firstTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="5월 1주" />
+
+        <TextView
+            android:id="@+id/secondTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@id/firstTextView"
+            app:layout_constraintStart_toEndOf="@+id/firstTextView"
+            app:layout_constraintTop_toTopOf="@id/firstTextView"
+            tools:text="(05.29 ~ 05.31)" />
+
+        <TextView
+            android:id="@+id/thirdTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/firstTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/firstTextView"
+            tools:text="1회" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

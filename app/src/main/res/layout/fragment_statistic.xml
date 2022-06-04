@@ -6,62 +6,138 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/nestedScrollView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBar">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="summaryTextView, summaryRecyclerView,firstLine, totalTextView, totalCountTextView, secondContour, statisticTextView, categoryRecyclerView, btn_show_total, thirdContour, forDayTextView, forDayChart, pieChart, barChart, lineChart, bottomTotalTextView, bottomLastTextView, btn_change_type, bottomTitleTextView, btn_add_event, fourthContour" />
+
+                <TextView
+                    android:id="@+id/noEventTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="250dp"
+                    android:gravity="center"
+                    android:text="설정한 기간에 발생한\n이벤트가 없습니다."
+                    android:textSize="24sp"
+                    android:textColor="@color/gray"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/firstContour" />
+
+                <FrameLayout
+                    android:id="@+id/topSummaryView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/teal_100"
+                    app:layout_constraintBottom_toTopOf="@+id/firstContour"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="12dp">
+
+                        <TextView
+                            android:id="@+id/topSummaryTitleView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="24dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="4월 이벤트 발생 현황"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            app:layout_constraintBottom_toTopOf="@+id/topSummaryTotalView"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_chainStyle="packed" />
+
+                        <TextView
+                            android:id="@+id/topSummaryTotalView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="24dp"
+                            android:text="0회"
+                            android:textColor="@color/white"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/topSummaryTitleView" />
+
+                        <Button
+                            android:id="@+id/btn_change_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="12dp"
+                            android:backgroundTint="@color/teal_200"
+                            android:text="기간 설정"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="@id/topSummaryTotalView"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/topSummaryTotalView" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </FrameLayout>
+
                 <View
                     android:id="@+id/firstContour"
                     android:layout_width="match_parent"
-                    android:layout_height="7dp"
-                    android:background="@color/gray"
-                    app:layout_constraintBottom_toTopOf="@id/summaryTextView"
+                    android:layout_height="8dp"
+                    android:background="@color/gray_100"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/topSummaryView" />
 
                 <TextView
                     android:id="@+id/summaryTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginVertical="12dp"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="20dp"
                     android:text="요약"
-                    android:textSize="26sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/summaryListView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/firstContour" />
 
-                <ListView
-                    android:id="@+id/summaryListView"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/summaryRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
                     app:layout_constraintBottom_toTopOf="@+id/firstLine"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/summaryTextView" />
+                    app:layout_constraintTop_toBottomOf="@id/summaryTextView"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_summary" />
 
                 <View
                     android:id="@+id/firstLine"
@@ -70,11 +146,11 @@
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
-                    android:background="@color/gray"
+                    android:background="@color/gray_100"
                     app:layout_constraintBottom_toTopOf="@+id/totalTextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/summaryListView" />
+                    app:layout_constraintTop_toBottomOf="@id/summaryRecyclerView" />
 
                 <TextView
                     android:id="@+id/totalTextView"
@@ -84,7 +160,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
                     android:gravity="center_vertical"
-                    android:text="총 횟수"
+                    android:text="총 발생 이벤트"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@+id/secondContour"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -100,6 +176,7 @@
                     android:ellipsize="end"
                     android:lines="1"
                     android:maxLines="1"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/totalTextView"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -109,9 +186,9 @@
                 <View
                     android:id="@+id/secondContour"
                     android:layout_width="match_parent"
-                    android:layout_height="7dp"
+                    android:layout_height="8dp"
                     android:layout_marginVertical="12dp"
-                    android:background="@color/gray"
+                    android:background="@color/gray_100"
                     app:layout_constraintBottom_toTopOf="@+id/statisticTextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -121,98 +198,176 @@
                     android:id="@+id/statisticTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginVertical="12dp"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="20dp"
                     android:text="통계"
-                    android:textSize="26sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/circleView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/secondContour" />
 
-                <View
-                    android:id="@+id/circleView"
+                <ImageButton
+                    android:id="@+id/btn_change_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/ic_baseline_settings_24"
+                    app:layout_constraintBottom_toBottomOf="@id/statisticTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/statisticTextView" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
-                    app:layout_constraintBottom_toTopOf="@id/statisticListView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/statisticTextView" />
 
-                <ListView
-                    android:id="@+id/statisticListView"
-                    android:layout_width="match_parent"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart"
+                    android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
-                    app:layout_constraintBottom_toTopOf="@+id/btn_showTotal"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/circleView" />
+                    app:layout_constraintTop_toBottomOf="@+id/statisticTextView" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginVertical="12dp"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/statisticTextView" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/categoryRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginVertical="12dp"
+                    app:layout_constraintBottom_toTopOf="@+id/btn_show_total"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pieChart"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_category" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_showTotal"
+                    android:id="@+id/btn_show_total"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
                     android:background="@drawable/btn_round_background"
                     android:elevation="0dp"
+                    android:stateListAnimator="@null"
                     android:text="전체보기"
                     app:layout_constraintBottom_toTopOf="@+id/thirdContour"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/statisticListView" />
+                    app:layout_constraintTop_toBottomOf="@id/categoryRecyclerView" />
 
                 <View
                     android:id="@+id/thirdContour"
                     android:layout_width="match_parent"
-                    android:layout_height="7dp"
+                    android:layout_height="8dp"
                     android:layout_marginVertical="12dp"
-                    android:background="@color/gray"
+                    android:background="@color/gray_100"
                     app:layout_constraintBottom_toTopOf="@+id/forDayTextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_showTotal" />
+                    app:layout_constraintTop_toBottomOf="@+id/btn_show_total" />
 
                 <TextView
                     android:id="@+id/forDayTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="24dp"
-                    android:layout_marginVertical="12dp"
+                    android:layout_marginHorizontal="22dp"
+                    android:layout_marginTop="20dp"
                     android:text="일별 추이"
-                    android:textSize="26sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/lineView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/thirdContour" />
 
-                <View
-                    android:id="@+id/lineView"
-                    android:layout_width="200dp"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/forDayChart"
+                    android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginVertical="12dp"
-                    app:layout_constraintBottom_toTopOf="@id/fourthContour"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/forDayTextView" />
 
+                <TextView
+                    android:id="@+id/bottomTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="12dp"
+                    android:text="총 발생 이벤트"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/forDayChart"
+                    app:layout_goneMarginStart="24dp" />
+
+                <TextView
+                    android:id="@+id/bottomTotalTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:text="15회"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/bottomTitleTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/bottomTitleTextView" />
+
+                <TextView
+                    android:id="@+id/bottomLastTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="지난 달 월평균 10회"
+                    app:layout_constraintBottom_toTopOf="@id/fourthContour"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bottomTitleTextView" />
+
                 <View
                     android:id="@+id/fourthContour"
                     android:layout_width="match_parent"
-                    android:layout_height="7dp"
-                    android:layout_marginVertical="12dp"
-                    android:background="@color/gray"
+                    android:layout_height="8dp"
+                    android:layout_marginVertical="24dp"
+                    android:background="@color/gray_100"
+                    app:layout_constraintBottom_toTopOf="@+id/btn_add_event"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bottomLastTextView" />
+
+                <Button
+                    android:id="@+id/btn_add_event"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="@color/white"
+                    android:stateListAnimator="@null"
+                    android:text="이벤트 추가하기"
+                    android:textColor="@color/gray"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lineView" />
+                    app:layout_constraintTop_toBottomOf="@id/fourthContour" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

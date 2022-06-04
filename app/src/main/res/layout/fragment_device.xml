@@ -25,14 +25,14 @@
             android:background="@drawable/btn_circle_background"
             android:src="@drawable/ic_baseline_add_24" />
 
-        <ImageButton
-            android:id="@+id/btn_move"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="36dp"
-            android:layout_marginBottom="36dp"
-            android:background="@drawable/btn_circle_background" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btn_move"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_gravity="bottom|start"-->
+<!--            android:layout_marginStart="36dp"-->
+<!--            android:layout_marginBottom="36dp"-->
+<!--            android:background="@drawable/btn_circle_background" />-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottomSheet"
