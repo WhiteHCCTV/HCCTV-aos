@@ -17,4 +17,7 @@ interface DeviceDao {
 
     @Query("SELECT * FROM Device")
     fun getAllDevices(): LiveData<List<Device>>
+
+    @Query("SELECT address FROM Device WHERE id = :id")
+    suspend fun getDeviceAddress(id : String) : String
 }
