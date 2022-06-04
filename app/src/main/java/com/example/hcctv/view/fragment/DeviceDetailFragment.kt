@@ -2,38 +2,40 @@ package com.example.hcctv.view.fragment
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Environment
+import android.os.Environment.DIRECTORY_DCIM
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.hcctv.R
 import com.example.hcctv.adapter.ImageItemAdapter
 import com.example.hcctv.base.BaseFragment
 import com.example.hcctv.databinding.FragmentDeviceDetailBinding
-import com.example.hcctv.model.data.Image
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.DataInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.lang.Exception
+import com.example.hcctv.viewmodel.DeviceDetailViewModel
+import kotlinx.coroutines.*
+import java.io.*
 import java.net.Socket
 import java.net.UnknownHostException
 
 class DeviceDetailFragment(override val FRAGMENT_TAG: String = "DEVICE_DETAIL_FRAGMENT") :
     BaseFragment<FragmentDeviceDetailBinding>(R.layout.fragment_device_detail) {
-    private val imageItemList: MutableList<Image> = mutableListOf()
-    private val selectedItemIndex: MutableList<Int> = mutableListOf()
+    private val imageItemList: MutableList<Bitmap> = mutableListOf()
+    private var selectedItemIndex: MutableList<Boolean> = mutableListOf()
+    private var fileCount = 0
+    private var deviceId = -1
+    private var socket: Socket? = null
 
     private val adapter by lazy {
-        ImageItemAdapter(itemClickListener = {
-            if (selectedItemIndex.contains(it)) {
-                selectedItemIndex.remove(it)
-            } else {
-                selectedItemIndex.add(it)
-            }
-        })
+        ImageItemAdapter()
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)[DeviceDetailViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,11 +48,18 @@ class DeviceDetailFragment(override val FRAGMENT_TAG: String = "DEVICE_DETAIL_FR
 
     override fun onDestroy() {
         super.onDestroy()
+        socket?.close()
 
         activity.hideBottomNavi(false)
     }
 
     private fun initViews() {
+        val bundle = arguments
+
+        if (bundle != null) {
+            deviceId = bundle.getString("id")!!.toInt()
+        }
+
         getFiles()
         initRecyclerView()
     }
@@ -58,94 +67,110 @@ class DeviceDetailFragment(override val FRAGMENT_TAG: String = "DEVICE_DETAIL_FR
     private fun initRecyclerView() {
         binding.imageRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.imageRecyclerView.adapter = adapter
-        adapter.submitList(imageItemList.toList())
     }
 
-    private fun getFileCount(): Int {
-        var fileCount = 0
 
+    // Socket을 사용하기 위해 IO Thread로 변경
+    private fun getFiles() {
         CoroutineScope(Dispatchers.IO).launch {
+            getImageCount()
+            getImages()
+        }
+    }
+
+
+    // 서버에서 이미지를 가져오는 메소드
+    private suspend fun getImageCount() {
+        try {
+            val initSocket = Socket(IP_ADDRESS, PORT_NUMBER)
+            val inputStream = initSocket.getInputStream()
+            val dataInputStream = DataInputStream(inputStream)
+            val imageCount = dataInputStream.readInt()
+
+            // 서버로부터 받아온 이미지 개수를 내장 스토리지에 저장
             try {
-                val initSocket = Socket(IP_ADDRESS, PORT_NUMBER)
-                val inputStream = initSocket.getInputStream()
-                val dataInputStream = DataInputStream(inputStream)
-
-                fileCount = dataInputStream.readInt()
-
-                // UI 변경을 위해 메인 쓰레드로 전환
-                withContext(Dispatchers.Main) {
-                    activity.showToast(requireContext(), fileCount.toString())
-                }
-
-                dataInputStream.close()
-                inputStream.close()
-                initSocket.close()
+                viewModel.insertImageCount(deviceId, imageCount)
+                // 이미지 개수만큼 이미지를 가져오기 위해 변수에 저장
+                fileCount = viewModel.getImageCount(deviceId)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
 
-        return fileCount
+            dataInputStream.close()
+            inputStream.close()
+            initSocket.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    private fun getFiles() {
-        // Progress 보여주고 이미지 수신 완료되면 RecyclerView 보여주기
-        showProgress()
-
+    // 서버에서 이미지를 가져오는 메소드
+    private fun getImages() {
         // 이미지 수신
-        val fileCount = getFileCount()
         var count = 0
-
-        var socket: Socket? = null
         var fileOutputStream: FileOutputStream? = null
 
-        CoroutineScope(Dispatchers.IO).launch {
-            do {
-                try {
-                    socket = Socket(IP_ADDRESS, PORT_NUMBER)
-                    val inputStream = socket?.getInputStream()
-                    val filePath = "$PATH$count.jpg"
-                    val fileOutputStream = FileOutputStream(filePath)
-                    val dataBuffer = ByteArray(10000)
-                    val dataLength = inputStream?.read(dataBuffer)
-
-                    while (dataLength != -1) {
-                        // dataBuffer에 파일 쓰고
-                        fileOutputStream.write(dataBuffer, 0, dataLength!!)
-                        // dataBuffer 저장
-                        imageItemList.add(Image(id = count, image = dataBuffer, selected = false))
-                    }
-
-
-                    withContext(Dispatchers.Main) {
-                        activity.showToast(requireContext(), filePath)
-                    }
-
-                } catch (e: UnknownHostException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } finally {
-                    fileOutputStream?.let {
-                        try {
-                            it.close()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
-                    }
-                    socket?.let {
-                        try {
-                            it.close()
-                        } catch (e: IOException) {
-                            e.printStackTrace()
-                        }
+        do {
+            try {
+                socket = Socket(IP_ADDRESS, PORT_NUMBER)
+                val inputStream = socket?.getInputStream()
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                imageItemList.add(bitmap)
+            } catch (e: UnknownHostException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                fileOutputStream?.let {
+                    try {
+                        it.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
                     }
                 }
-                count += 1
-            } while (count < fileCount)
+                socket?.let {
+                    try {
+                        it.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            count += 1
+        } while (count < fileCount)
+
+        // 리사이클러뷰에서 UI를 변경해줘야하므로 Main Thread로 변경
+        CoroutineScope(Dispatchers.Main).launch {
+            adapter.submitList(imageItemList)
+        }
+    }
+
+    private fun sendClickedImages(items: List<Boolean>) {
+        val unSelectedItems = mutableListOf<Int>()
+
+        for (i in items.indices) {
+            if (!items[i]) unSelectedItems.add(i + 1)
         }
 
-        hideProgress()
+        var socket: Socket? = null
+        var objectOutputStream: ObjectOutputStream? = null
+
+        try {
+            socket = Socket(IP_ADDRESS, PORT_NUMBER)
+            objectOutputStream = ObjectOutputStream(socket.getOutputStream())
+
+            objectOutputStream.writeObject(unSelectedItems)
+        } catch (e: UnknownHostException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            socket?.close()
+            objectOutputStream?.close()
+        }
     }
 
     private fun saveSelectedItems() {
@@ -153,12 +178,12 @@ class DeviceDetailFragment(override val FRAGMENT_TAG: String = "DEVICE_DETAIL_FR
             val listener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        // 오름차순으로 정렬하고 submit
-                        selectedItemIndex.sort()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            sendClickedImages(adapter.getList())
+                            activity.supportFragmentManager.popBackStack()
+                        }
                     }
-                    DialogInterface.BUTTON_NEGATIVE -> {
-
-                    }
+                    DialogInterface.BUTTON_NEGATIVE -> Unit
                 }
             }
 
@@ -184,9 +209,19 @@ class DeviceDetailFragment(override val FRAGMENT_TAG: String = "DEVICE_DETAIL_FR
         btnSubmit.visibility = View.VISIBLE
     }
 
+    private fun showErrorMessage() = with(binding) {
+        titleTextView.visibility = View.GONE
+        subTitleTextView.visibility = View.GONE
+        imageRecyclerView.visibility = View.GONE
+        btnSubmit.visibility = View.GONE
+
+        errorTitleTextView.visibility = View.VISIBLE
+        errorSubtitleTextView.visibility = View.VISIBLE
+    }
+
     companion object {
-        const val IP_ADDRESS = "http://192.168.1.1"
-        const val PORT_NUMBER: Int = 5555
-        const val PATH = "./sample/client"
+        const val IP_ADDRESS = "168.188.128.94"
+        const val PORT_NUMBER: Int = 8080
+        const val PATH = "./sample/server"
     }
 }
