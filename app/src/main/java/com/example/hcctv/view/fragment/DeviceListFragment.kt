@@ -1,8 +1,10 @@
 package com.example.hcctv.view.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hcctv.R
@@ -21,7 +23,13 @@ class DeviceListFragment(override val FRAGMENT_TAG: String = "DeviceFragment") :
 
     private val adapter by lazy {
         DeviceItemAdapter(itemClickListener = {
-            activity.saveAndChangeFragment(DeviceDetailFragment())
+            val fragment = DeviceDetailFragment()
+            val bundle = Bundle().apply {
+                putString("id", it.id.toString())
+            }
+            fragment.arguments = bundle
+
+            activity.saveAndChangeFragment(fragment)
         })
     }
 
@@ -70,8 +78,8 @@ class DeviceListFragment(override val FRAGMENT_TAG: String = "DeviceFragment") :
     }
 
     private fun moveStatistic() {
-        binding.btnMove.setOnClickListener {
-            activity.saveAndChangeFragment(StatisticFragment())
-        }
+//        binding.btnMove.setOnClickListener {
+//            activity.saveAndChangeFragment(StatisticFragment())
+//        }
     }
 }

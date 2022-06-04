@@ -12,13 +12,17 @@ class DeviceRepositoryImpl(application: Application) : DeviceRepository {
     }
 
     override suspend fun insertDevice(address: String) =
-        deviceDao.insertDevice(Device(id = null, ipAddress = address))
+        deviceDao.insertDevice(Device(id = null, address = address))
 
     override suspend fun updateDevice(address: String) =
-        deviceDao.updateDevice(Device(id = null, ipAddress = address))
+        deviceDao.updateDevice(Device(id = null, address = address))
 
     override suspend fun deleteDevice(address: String) =
-        deviceDao.deleteDevice(Device(id = null, ipAddress = address))
+        deviceDao.deleteDevice(Device(id = null, address = address))
 
     override fun getAllDevices(): LiveData<List<Device>> = deviceDao.getAllDevices()
+
+    override suspend fun getDeviceAddress(id: String) : String {
+        return deviceDao.getDeviceAddress(id)
+    }
 }

@@ -4,9 +4,6 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.hcctv.model.data.Device
 import com.example.hcctv.model.repository.DeviceRepositoryImpl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DeviceViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = DeviceRepositoryImpl(application)
@@ -29,5 +26,9 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
 
     suspend fun deleteDevice(address: String) {
         repository.deleteDevice(address)
+    }
+
+    suspend fun getDeviceAddress(id : String) : String {
+        return repository.getDeviceAddress(id)
     }
 }

@@ -14,7 +14,7 @@ class DeviceItemAdapter(private val itemClickListener: (Device) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindViews(item: Device) {
-            binding.addressTextView.text = item.ipAddress
+            binding.addressTextView.text = item.address
 
             binding.root.setOnClickListener {
                 itemClickListener(item)

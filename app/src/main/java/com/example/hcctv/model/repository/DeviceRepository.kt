@@ -11,4 +11,6 @@ interface DeviceRepository {
     suspend fun deleteDevice(address: String)
 
     fun getAllDevices(): LiveData<List<Device>>
+
+    suspend fun getDeviceAddress(id : String) : String
 }
