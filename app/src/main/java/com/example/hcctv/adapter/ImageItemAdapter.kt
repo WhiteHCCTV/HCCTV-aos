@@ -1,40 +1,43 @@
 package com.example.hcctv.adapter
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.hcctv.R
 import com.example.hcctv.databinding.ItemImageBinding
-import com.example.hcctv.model.data.Image
 
-class ImageItemAdapter(private val itemClickListener: (Int) -> Unit) :
+class ImageItemAdapter :
     RecyclerView.Adapter<ImageItemAdapter.ViewHolder>() {
-    private var imageItemList: List<Image>? = null
+    private var imageItemList: List<Bitmap>? = null
+    private var selectItemList: ArrayList<Boolean> = arrayListOf(
+        false,
+        false,
+        false,
+        false,
+        false
+    )
 
     inner class ViewHolder(private val binding: ItemImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun initViews(item: Image) {
+        fun initViews(item: Bitmap) {
             Glide.with(binding.imageView)
-                .load(item.image)
+                .load(item)
                 .centerCrop()
                 .into(binding.imageView)
 
             binding.root.setOnClickListener {
-                itemClickListener(adapterPosition)
-
-                if (item.selected == false) {
-                    binding.imageView.setPadding(10)
+                if (!selectItemList[position]) {
+                    binding.imageView.setPadding(10, 10, 10, 10)
                     binding.imageView.setBackgroundResource(R.drawable.image_selected_background)
-                    item.selected = true
+                    selectItemList[position] = true
                 } else {
-                    binding.imageView.setPadding(0)
+                    binding.imageView.setPadding(0, 0, 0, 0)
                     binding.imageView.setBackgroundResource(0)
-                    item.selected = false
+                    selectItemList[position] = false
                 }
             }
-
         }
     }
 
@@ -58,8 +61,13 @@ class ImageItemAdapter(private val itemClickListener: (Int) -> Unit) :
         return imageItemList?.size ?: 0
     }
 
-    fun submitList(items: List<Image>?) {
+    fun submitList(items: List<Bitmap>?) {
         imageItemList = items
         notifyDataSetChanged()
     }
+
+    fun getList(): List<Boolean> {
+        return selectItemList
+    }
+
 }
